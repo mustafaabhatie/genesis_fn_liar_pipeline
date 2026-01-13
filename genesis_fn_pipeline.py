@@ -83,7 +83,7 @@ MAX_FEATURE_PENALTY = 0.3     # Maximum penalty for too many features
 
 # Text Preprocessing Utilities
 def initialize_nltk_resources():
-    """Initialize required NLTK resources."""
+    # Initialize required NLTK resources
     resources = ['stopwords', 'wordnet', 'punkt', 'averaged_perceptron_tagger']
     for resource in resources:
         try:
@@ -92,7 +92,7 @@ def initialize_nltk_resources():
             nltk.download(resource, quiet=True)
 
 class TextPreprocessor:
-    """Comprehensive text preprocessing for fake news detection."""
+    # Text preprocessing 
     
     def __init__(self):
         self.stop_words = set(stopwords.words('english'))
@@ -107,7 +107,7 @@ class TextPreprocessor:
         self.stop_words.update(self.fake_news_stopwords)
     
     def preprocess(self, text: str) -> str:
-        """Complete text preprocessing pipeline."""
+        # Complete text preprocessing pipeline
         if not isinstance(text, str):
             text = str(text) if pd.notna(text) else ""
         
@@ -142,7 +142,7 @@ class TextPreprocessor:
 # Data Loading and Preparation
 
 def load_and_prepare_data(filepath: str) -> Tuple[pd.DataFrame, pd.Series]:
-    """Load LIAR dataset and prepare labels."""
+    # Load LIAR dataset and prepare labels
     columns = [
         'id', 'label', 'statement', 'subject', 'speaker', 'job', 
         'state', 'party', 'barely_true_c', 'false_c', 'half_true_c',
@@ -233,7 +233,7 @@ class HybridFeatureExtractor:
         return csr_matrix(X_bert)
     
     def extract_metadata_features(self, df: pd.DataFrame) -> csr_matrix:
-        """Extract categorical and numerical metadata features."""
+        # Extract categorical and numerical metadata features
         # Categorical features
         categorical_cols = ['subject', 'speaker', 'job', 'state', 'party', 'venue']
         
@@ -260,7 +260,7 @@ class HybridFeatureExtractor:
         return hstack([X_cat, csr_matrix(X_num)])
     
     def extract_readability_features(self, texts: List[str]) -> np.ndarray:
-        """Extract readability scores (Flesch-Kincaid, etc.)."""
+        # Extract readability scores (Flesch-Kincaid, etc.)
         readability_scores = []
         
         for text in texts:
@@ -286,7 +286,7 @@ class HybridFeatureExtractor:
         return np.array(readability_scores)
     
     def extract_all_features(self, df: pd.DataFrame, texts: List[str]) -> Tuple[csr_matrix, Dict]:
-        """Extract complete hybrid feature set."""
+        # Extract complete hybrid feature set
         print("  Extracting TF-IDF features...")
         X_tfidf = self.extract_tfidf_features(texts)
         
