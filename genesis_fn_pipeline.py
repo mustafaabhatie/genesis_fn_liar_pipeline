@@ -605,12 +605,10 @@ class FeatureSelectionGA:
         
         return selected_indices, stats
 
-# ----------------------------------------------------------------------
 # Genetic Algorithm Layer 2: SVM Hyperparameter Optimization (Section 4.0.3)
-# ----------------------------------------------------------------------
 
 class SVMHyperparameterGA:
-    """Genetic Algorithm for SVM hyperparameter optimization."""
+    # Genetic Algorithm for SVM hyperparameter optimization
     
     def __init__(self,
                  pop_size: int = GA2_POPULATION_SIZE,
@@ -631,7 +629,7 @@ class SVMHyperparameterGA:
         self.kernel_types = SVM_KERNEL_TYPES
         
     def encode_individual(self, C: float, gamma: float, kernel: str) -> np.ndarray:
-        """Encode hyperparameters into a normalized chromosome [0, 1]."""
+        # Encode hyperparameters into a normalized chromosome [0, 1]
         # Normalize C (log scale)
         C_norm = (np.log10(C) - np.log10(self.c_bounds[0])) / \
                 (np.log10(self.c_bounds[1]) - np.log10(self.c_bounds[0]))
@@ -646,7 +644,7 @@ class SVMHyperparameterGA:
         return np.array([C_norm, gamma_norm, kernel_norm])
     
     def decode_individual(self, chromosome: np.ndarray) -> Tuple[float, float, str]:
-        """Decode chromosome to hyperparameters."""
+        # Decode chromosome to hyperparameters
         # Ensure values are in [0, 1] range
         C_norm = np.clip(chromosome[0], 0.0, 1.0)
         gamma_norm = np.clip(chromosome[1], 0.0, 1.0)
@@ -665,7 +663,7 @@ class SVMHyperparameterGA:
         return C, gamma, kernel
     
     def initialize_population(self) -> np.ndarray:
-        """Initialize population with diverse hyperparameters."""
+        # Initialize population with diverse hyperparameters
         population = []
         
         for i in range(self.pop_size):
@@ -696,7 +694,7 @@ class SVMHyperparameterGA:
     
     def evaluate_fitness(self, chromosome: np.ndarray, 
                         X: csr_matrix, y: np.ndarray) -> float:
-        """Evaluate fitness using SVM with given hyperparameters."""
+        # Evaluate fitness using SVM with given hyperparameters
         C, gamma, kernel = self.decode_individual(chromosome)
         
         try:
@@ -727,7 +725,7 @@ class SVMHyperparameterGA:
     
     def arithmetic_crossover(self, parent1: np.ndarray, 
                            parent2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-        """Arithmetic crossover for continuous parameters."""
+        # Arithmetic crossover for continuous parameters
         if random.random() > self.crossover_rate:
             return parent1.copy(), parent2.copy()
         
@@ -742,7 +740,7 @@ class SVMHyperparameterGA:
     def gaussian_mutation(self, chromosome: np.ndarray, 
                          generation: int, 
                          max_generation: int) -> np.ndarray:
-        """Gaussian mutation with decaying strength."""
+        # Gaussian mutation with decaying strength
         mutated = chromosome.copy()
         
         # Adaptive mutation strength
@@ -761,7 +759,7 @@ class SVMHyperparameterGA:
         return mutated
     
     def run(self, X: csr_matrix, y: np.ndarray) -> Dict:
-        """Execute GA hyperparameter optimization."""
+        # Execute GA hyperparameter optimization
         population = self.initialize_population()
         best_fitness_history = []
         best_chromosome = None
@@ -864,12 +862,10 @@ class SVMHyperparameterGA:
         
         return stats
 
-# ----------------------------------------------------------------------
 # Main Genesis-FN Pipeline
-# ----------------------------------------------------------------------
 
 class GenesisFNPipeline:
-    """Complete Genesis-FN pipeline with dual-layer GA optimization."""
+    # Complete Genesis-FN pipeline with dual-layer GA optimization
     
     def __init__(self, 
                  use_bert: bool = True,
@@ -894,7 +890,7 @@ class GenesisFNPipeline:
         self.feature_metadata = None
         
     def log(self, message: str, level: str = "INFO"):
-        """Logging utility."""
+        # Logging utility
         if self.verbose:
             prefix = {
                 "INFO": "[INFO]",
@@ -905,7 +901,7 @@ class GenesisFNPipeline:
             print(f"{prefix} {message}")
     
     def run(self, data_path: str) -> Dict:
-        """Execute complete Genesis-FN pipeline."""
+        # Execute complete Genesis-FN pipeline
         self.log("=" * 70)
         self.log("GENESIS-FN: Evolutionary Fake News Detection Pipeline")
         self.log("=" * 70)
@@ -1047,7 +1043,7 @@ class GenesisFNPipeline:
         return self.results
     
     def save_results(self):
-        """Save all results to files."""
+        # Save all results to files
         import pickle
         import time
         
@@ -1096,7 +1092,7 @@ class GenesisFNPipeline:
         self.log(f"  Summary report: {summary_file}")
     
     def create_summary_report(self, filename: str):
-        """Create human-readable summary report."""
+        # Create human-readable summary report
         with open(filename, 'w') as f:
             f.write("=" * 70 + "\n")
             f.write("GENESIS-FN: COMPLETE SUMMARY REPORT\n")
@@ -1163,7 +1159,7 @@ class GenesisFNPipeline:
             f.write("=" * 70 + "\n")
     
     def print_final_results(self):
-        """Print final results to console."""
+        # Print final results to console
         if not self.results:
             self.log("No results available. Run the pipeline first.", "ERROR")
             return
@@ -1201,9 +1197,7 @@ class GenesisFNPipeline:
         
         print("\n" + "=" * 70)
 
-# ----------------------------------------------------------------------
 # Main Execution
-# ----------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(
